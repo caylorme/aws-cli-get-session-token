@@ -31,7 +31,7 @@ The script will prompt for the MFA Serial if it is undefined. This value will be
 
 The value can be either a serial number for a hardware device (such as GAHT12345678) or an Amazon Resource Name (ARN) for a virtual MFA device (such as arn:aws:iam::123456789012:mfa/user).
 
-# Running the script
+# Running the script (aws_mfa.sh)
 
 The script will prompt for all configuration items as needed and described above. The script will make an attempt at storing the mfa serial and origin profile for the mfa profile.
 
