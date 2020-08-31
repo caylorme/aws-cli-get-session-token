@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -e
 # INPUT PARAMETERS
 # origin_profile (prompt iniailly, store in config)
 # mfa_profile (prompt-only)
