@@ -1,7 +1,7 @@
 # aws-cli-get-session-token
 A simple bash script to help with automating aws sts get-session-token and profile creation
 
-This script depends on awscli (v1 or v2) and jq (developed with 1.6)
+This script depends on awscli (v1 or v2)
 
 # Configuration
 
@@ -39,7 +39,7 @@ You will always be prompted to give your MFA Token Code which will be found on y
 
 The script will then run an `aws sts get-session-token` with the MFA Serial and MFA Token Codes as parameters, using the Origin Profile.
 
-The output of this command is piped into `jq` for extraction of the `aws_access_key_id`, `aws_secret_access_key`, `aws_session_token`, and `aws_session_expiration` values.
+The output of this command is used for extraction of the `aws_access_key_id`, `aws_secret_access_key`, `aws_session_token`, and `aws_session_expiration` values.
 
 These values are then stored within your MFA Profile using `aws configure`
 

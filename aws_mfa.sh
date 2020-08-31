@@ -1,13 +1,12 @@
 #!/bin/bash
-
+set -ex
 # INPUT PARAMETERS
 # origin_profile (prompt iniailly, store in config)
 # mfa_profile (prompt-only)
 # mfa_serial (prompt initially, store in config)
 # mfa_token_code (prompt-only)
 
-# Dependencies: awscli, jq
-test ! $(command -v jq) && echo "jq is required, please install and ensure the binary is in your \$PATH." && exit 1
+# Dependencies: awscli
 test ! $(command -v aws) && echo "awscli is required, please install and ensure the binary is in your \$PATH." && exit 1
 
 # Prompt for the mfa_profile
@@ -52,9 +51,9 @@ read -p "MFA Token Code: " TMP_MFA_TOKEN_CODE
 done
 
 # run get-session-token using the mfa_serial and mfa_token_code using the origin_profile and capture the temporary credentials
-read TMP_ACCESS_KEY_ID TMP_SECRET_ACCESS_KEY TMP_SESSION_TOKEN TMP_EXPIRATION < \
-    <(echo $(aws sts get-session-token --serial-number ${TMP_MFA_SERIAL_ARN} --token ${TMP_MFA_TOKEN_CODE} --profile ${TMP_AWS_ORIGIN_PROFILE} | \
-    jq -r '.Credentials.AccessKeyId, .Credentials.SecretAccessKey, .Credentials.SessionToken, .Credentials.Expiration'))
+TMP_RESPONSE=$(aws sts get-session-token --serial-number ${TMP_MFA_SERIAL_ARN} --token ${TMP_MFA_TOKEN_CODE} --output text --profile ${TMP_AWS_ORIGIN_PROFILE} \
+        --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken,Expiration]')
+read -r TMP_ACCESS_KEY_ID TMP_SECRET_ACCESS_KEY TMP_SESSION_TOKEN TMP_EXPIRATION < <(echo ${TMP_RESPONSE})
 
 # set the temporary credentials for the mfa_profile
 aws configure set profile.${TMP_AWS_MFA_PROFILE}.aws_access_key_id ${TMP_ACCESS_KEY_ID}
