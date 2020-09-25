@@ -18,7 +18,9 @@ read -p "MFA Profile: " TMP_AWS_MFA_PROFILE
 done
 
 # read the origin_profile value from the mfa_profile config
+set +e
 read TMP_AWS_ORIGIN_PROFILE < <(aws configure get profile.${TMP_AWS_MFA_PROFILE}.origin_profile)
+set -e
 
 # prompt for origin_profile if it did not exist within the mfa_profile
 while [ -z "${TMP_AWS_ORIGIN_PROFILE}" ]
@@ -31,7 +33,9 @@ done
 aws configure set profile.${TMP_AWS_MFA_PROFILE}.origin_profile ${TMP_AWS_ORIGIN_PROFILE}
 
 # read the mfa_serial from the mfa_profile config
+set +e
 read TMP_MFA_SERIAL_ARN < <(aws configure get profile.${TMP_AWS_MFA_PROFILE}.mfa_serial)
+set -e
 
 # prompt for the mfa_serial if it did not exist within the mfa_profile
 while [ -z "${TMP_MFA_SERIAL_ARN}" ]
